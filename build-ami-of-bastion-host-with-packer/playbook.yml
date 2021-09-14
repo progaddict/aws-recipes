@@ -1,0 +1,71 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+
+  tasks:
+    - name: install basic tools
+      become: true
+      dnf:
+        name:
+          - bind-utils
+          - curl
+          - file
+          - gawk
+          - git
+          - htop
+          - iputils
+          - jq
+          - lsof
+          - nano
+          - net-tools
+          - nmap
+          - openssl
+          - p7zip
+          - rsync
+          - traceroute
+          - unzip
+          - which
+        state: latest
+      tags:
+        - dnf
+        - basic-tools
+
+    - name: add HashiCorp repository
+      block:
+        - name: install dnf-plugins-core
+          become: true
+          dnf:
+            name: dnf-plugins-core
+            state: latest
+        - name:
+          become: true
+          # https://www.terraform.io/docs/cli/install/yum.html
+          command: >-
+            dnf config-manager
+              --add-repo
+              https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+      tags:
+        - hashicorp
+        - hashicorp-repository
+
+    - name: install terraform
+      become: true
+      dnf:
+        name: terraform
+        state: latest
+      tags:
+        - hashicorp
+        - terraform
+
+    - name: install AWS CLI
+      become: true
+      ansible.builtin.shell:
+        cmd: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          ./aws/install
+          rm -rf aws awscliv2.zip
+        chdir: /tmp
+      tags:
+        - aws
+        - aws-cli
