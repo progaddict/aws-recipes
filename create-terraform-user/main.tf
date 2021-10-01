@@ -12,16 +12,17 @@ terraform {
   }
 }
 
-provider "aws" {}
+provider "aws" {
+  default_tags {
+    tags = var.common_tags
+  }
+}
 
 resource "aws_iam_user" "alex_terraform_user" {
   name          = "AlexTerraformUser"
   path          = "/alexryndin/iac/terraform/"
   force_destroy = true
-  tags = merge(
-    var.common_tags,
-    {
-      Name = "Terra Form"
-    }
-  )
+  tags = {
+    Name = "Terra Form"
+  }
 }
