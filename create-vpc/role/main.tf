@@ -89,10 +89,23 @@ resource "aws_iam_policy" "create_vpc" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      # TODO define rights to create VPC
       {
-        Effect   = "Allow",
-        Action   = ["ec2:StartInstances"],
+        Effect = "Allow",
+        Action = [
+          "ec2:*CidrBlock*",
+          "ec2:*DhcpOptions*",
+          "ec2:*InternetGateway*",
+          "ec2:*NatGateway*",
+          "ec2:*NetworkAcl*",
+          "ec2:*NetworkInterface*",
+          "ec2:*Route*",
+          "ec2:*SecurityGroup*",
+          "ec2:*Subnet*",
+          "ec2:*Tags",
+          "ec2:*Vpc*",
+          "ec2:DescribeAccountAttributes",
+          "ec2:DescribeAvailabilityZones",
+        ],
         Resource = "*"
       },
     ]
