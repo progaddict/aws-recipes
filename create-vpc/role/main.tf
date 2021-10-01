@@ -12,7 +12,11 @@ terraform {
   }
 }
 
-provider "aws" {}
+provider "aws" {
+  default_tags {
+    tags = var.common_tags
+  }
+}
 
 variable "common_tags" {
   type        = map(string)
@@ -60,12 +64,9 @@ resource "aws_iam_policy" "s3_tf_state_access" {
       },
     ]
   })
-  tags = merge(
-    var.common_tags,
-    {
-      Name = "s3_tf_state_access"
-    }
-  )
+  tags = {
+    Name = "s3_tf_state_access"
+  }
 }
 
 resource "aws_iam_user_policy_attachment" "s3_tf_state_access" {
@@ -79,12 +80,9 @@ resource "aws_iam_role" "create_vpc" {
   path               = "/alexryndin/iac/terraform/"
   description        = "Contains necessary access rights to create a VPC."
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-  tags = merge(
-    var.common_tags,
-    {
-      Name = "create_vpc"
-    }
-  )
+  tags = {
+    Name = "create_vpc"
+  }
 }
 
 resource "aws_iam_policy" "create_vpc" {
@@ -99,12 +97,9 @@ resource "aws_iam_policy" "create_vpc" {
       },
     ]
   })
-  tags = merge(
-    var.common_tags,
-    {
-      Name = "create_vpc"
-    }
-  )
+  tags = {
+    Name = "create_vpc"
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "create_vpc" {
